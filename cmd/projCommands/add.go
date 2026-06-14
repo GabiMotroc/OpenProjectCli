@@ -3,6 +3,7 @@ package projCommands
 import (
 	"OpenCli/data"
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -13,6 +14,8 @@ func projAdd(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("error loading projects: %v", err)
 	}
 
+	dir, err := os.Getwd()
+	fmt.Println(dir)
 	items = append(items, data.Project{AppType: args[0], Location: args[1]})
 
 	err = data.SaveProjects(items)
@@ -24,10 +27,10 @@ func projAdd(cmd *cobra.Command, args []string) error {
 }
 
 var addCmd = &cobra.Command{
-	Use:   "add",
-	Short: "Add a new project",
+	Use:   "add <command> <location>",
+	Short: "Add a new project, if no location is provided, the current directory will be used",
 	Long:  "Add a project with the given name.",
-	Args:  cobra.MaximumNArgs(2),
+	Args:  cobra.RangeArgs(1, 2),
 	RunE:  projAdd,
 }
 
